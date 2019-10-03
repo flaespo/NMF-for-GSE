@@ -4,6 +4,7 @@ library(GEOquery)
 
 
 gset <- getGEO("series name", GSEMatrix =TRUE, AnnotGPL=TRUE)[[1]]
+#gset <- getGEO(filename=system.file("extdata/GSE781_family.soft.gz",package="GEOquery"))
 a =fData(gset)
 gene_symb = a$"name to identify gene symbol" 
 
