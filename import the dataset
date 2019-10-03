@@ -1,0 +1,42 @@
+#packages required
+library(Biobase)
+library(GEOquery)
+
+
+gset <- getGEO("series name", GSEMatrix =TRUE, AnnotGPL=TRUE)[[1]]
+a =fData(gset)
+gene_symb = a$"name to identify gene symbol" 
+
+
+#Convert the ExpressionSet to a Matrix
+E<-exprs(gset)
+
+#select the samples interested in
+Z=E[,number of samples]
+
+#check how many gene symbol are avaible and construct the new dataset
+n = length(gene_symb)
+count_NA = 0
+pos= c()
+for (i in 1:n){
+	if(gene_symb[i]==""){	
+		pos =c(pos,i)
+		count_NA = count_NA+1
+}
+}
+
+#remove rows with no gene symbol
+Y = Z[-pos,]
+gene_symb_clean = gene_symb[-pos]
+
+
+#remove duplicates
+Probesets=rownames(Y) 
+Genes=gene_symb_clean
+MAD = apply(Y,1,mad) 
+M=data.frame(Y,MAD,Genes)
+M=M[order(M$MAD,decreasing=T),]
+X_temp=M[which(!duplicated(M$Genes)),]
+X = data.matrix(X_temp[,1:3])
+rownames(X)=X_temp$Genes
+

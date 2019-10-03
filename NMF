@@ -1,0 +1,23 @@
+#package required
+library(NMF)
+
+
+#Estimate rank for NMF
+rank<-nmfEstimateRank(X,2:3,nrun=10)
+
+#NMF
+r=3
+out.multirun<-nmf(X,r,nrun=200,.options="t")
+#fitting
+fit(out.multirun)
+plot(out.multirun)
+#reconstruction
+out.multirun.cap<-fitted(out.multirun)
+#factors
+W.tot<-basis(out.multirun)
+H.tot<-coef(out.multirun)
+#extract relevant features
+score<-featureScore(out.multirun)
+s.multirun<-extractFeatures(out.multirun)
+
+
